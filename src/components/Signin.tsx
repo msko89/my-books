@@ -1,8 +1,23 @@
 import { Button, Col, Input, Row } from 'antd';
-import React from 'react';
+import React, { useRef } from 'react';
+import { LoginReqType } from '../types';
 import styles from './Signin.module.css';
 
-export default function Signin() {
+interface SigninProps {
+  login: (reqData: LoginReqType) => void;
+}
+
+const Signin: React.FC<SigninProps> = ({ login }) => {
+  const emailRef = useRef<Input>(null);
+  const passwordRef = useRef<Input>(null);
+
+  const handleClick = () => {
+    const email = emailRef.current!.state.value;
+    const password = passwordRef.current!.state.value;
+
+    login({ email, password });
+  };
+
   return (
     <Row align='middle' className={styles.signin_row}>
       <Col span={24}>
@@ -30,6 +45,7 @@ export default function Signin() {
                 autoComplete='email'
                 name='email'
                 className={styles.input}
+                ref={emailRef}
               />
             </div>
             <div className={styles.password_title}>
@@ -40,12 +56,16 @@ export default function Signin() {
               <Input
                 type='password'
                 autoComplete='current-password'
-                name='password'
                 className={styles.input}
+                ref={passwordRef}
               />
             </div>
             <div className={styles.button_area}>
-              <Button size='large' className={styles.button}>
+              <Button
+                size='large'
+                className={styles.button}
+                onClick={handleClick}
+              >
                 Sign In
               </Button>
             </div>
@@ -54,4 +74,6 @@ export default function Signin() {
       </Col>
     </Row>
   );
-}
+};
+
+export default Signin;
